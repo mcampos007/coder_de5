@@ -6,6 +6,8 @@ import usersDao from "../daos/dbManager/users.dao.js";
 import productsDao from "../daos/dbManager/products.dao.js";
 
 
+
+
 const router = Router();
 
 router.use(cookieParser('CoderS3cr3tC0d3'))
@@ -138,7 +140,9 @@ router.get('/products', async (req, res) => {
         
         console.log(req.session.user.name);
         
-       const products = await productsDao.getAllProducts(parametros);
+      const products = await productsDao.getAllProducts(parametros);
+      
+       
        
        res.render('products/index', {
         title:"Product List",

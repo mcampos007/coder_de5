@@ -25,19 +25,15 @@ import messagesDao from "./daos/dbManager/messages.dao.js";
 import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
 
 import session from "express-session";
-
-import FileStore from 'session-file-store';
+//import FileStore from 'session-file-store';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 
 const app = express();
 
+app.use(cookieParser());
+
 app.use(logger);
-app.use(session({
-    secret:"Asrock640", 
-    resave:true,
-    saveUninitialized:true
-}))
 
 // `mongodb+srv://mcamposinfocam:${password}@cluster0.alvwu9f.mongodb.net/${db_name}?retryWrites=true&w=majority`)
 //const MONGO_URL = "mongodb://localhost:27017/clase19?retryWrites=true&w=majority";
@@ -50,21 +46,21 @@ app.use(session(
         //retries: Reintentos para que el servidor lea el archivo del storage.
         //path: Ruta a donde se buscará el archivo del session store.
         // // Usando --> session-file-store
-        // store: new fileStore({ path: "./sessions", ttl: 15, retries: 0 }),
+//        store: new FileStore({ path: "./sessions", ttl: 15, retries: 0 }),
 
         // Usando --> connect-mongo
-        store: MongoStore.create({
+         store: MongoStore.create({
             mongoUrl: MONGO_URL,
             //mongoOptions --> opciones de confi para el save de las sessions
             mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
             ttl: 10 * 60
-        }),
+        }), 
 
         secret: "coderS3cr3t",
         resave: false, // guarda en memoria
         saveUninitialized: true //lo guarda a penas se crea
     }
-))
+)) 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

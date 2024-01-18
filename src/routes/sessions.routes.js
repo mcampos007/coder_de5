@@ -9,6 +9,18 @@ const router = Router();
 //Registro un usuario
 router.post('/register', async(req,res) =>{
     console.log(req.body);
+
+    // Verificar si se proporcionan todas las propiedades requeridas
+    const requiredProperties = ['first_name', 'last_name', 'email', 'age', 'password'];
+    const missingProperties = requiredProperties.filter(prop => !(prop in req.body));
+
+    if (missingProperties.length > 0) {
+    return res.status(400).json({
+        status: 'error',
+        message: `Faltan algunos datos para poder crear el usuarios: ${missingProperties.join(', ')}`
+    });
+    }
+
     const { first_name, last_name, email, age, password } = req.body;
     console.log("Registro de usuario");
     console.log(req.body);
