@@ -32,33 +32,7 @@ router.get('/', (req, res) => {
     res.render('login', data)
 });
 
-router.post('/setcookie', (req, res) => {
-    console.log(req.body);
-    res.cookie('username', req.body.email, { maxAge: 100000, signed: true,  }).send('')
-})
-
-router.get('/getcookie', (req, res) => {
-    // Sin firma
-    // res.send(req.cookies)
-
-    // Con firma
-    console.log(req.signedCookies);
-    res.send(req.signedCookies)
-
-});
-
-router.get('/session',  (req, res) => {
-    if(req.session.counter){
-        req.session.counter++;
-        res.send(`Se ha visitado ${req.session.counter} veces el sitio`);
-    }
-    else{
-        req.session.counter = 1;
-        res.send("Bienvenido");
-    }
-})
-
-router.get('/home', (req, res) => {
+/* router.get('/home', (req, res) => {
     // Verificar si el usuario está autenticado
     console.log(req.session);
     if (req.session && req.session.user && req.session.admin) {
@@ -79,21 +53,15 @@ router.get('/home', (req, res) => {
         // El usuario no está autenticado, redirigir o manejar según sea necesario
         res.redirect('/ingresar'); // Por ejemplo, redirigir a la página de inicio de sesión
     }
-});
+}); */
 
-router.get('/login' ,  (req, res) => {
-    const { password, email} = req.query;
-  
-    /* if (username !=='pepe' || password !=='pepepass'){
-        return res.send("Login failed");
-    } */
-    //req.session.user = username
-    req.session.admin = true
-    res.send("login success!")
-});
 
 router.get('/profile',  (req, res) => {
+    console.log("datos de la session");
     console.log(req.session.user);
+    if (!req.session.user){
+       return  res.render('errors', { message: 'Usuario no autenticado' });
+    }
     const user= {
         name: req.session.user.name,
         email: req.session.user.email,
@@ -164,4 +132,33 @@ function auth(req, res, next){
         return res.status(403).send("No estas autorizado a ver este recurso");
     }
 }
+
+
+
+router.post('/setcookie', (req, res) => {
+    console.log(req.body);
+    res.cookie('username', req.body.email, { maxAge: 100000, signed: true,  }).send('')
+})
+
+router.get('/getcookie', (req, res) => {
+    // Sin firma
+    // res.send(req.cookies)
+
+    // Con firma
+    console.log(req.signedCookies);
+    res.send(req.signedCookies)
+
+});
+
+router.get('/session',  (req, res) => {
+    if(req.session.counter){
+        req.session.counter++;
+        res.send(`Se ha visitado ${req.session.counter} veces el sitio`);
+    }
+    else{
+        req.session.counter = 1;
+        res.send("Bienvenido");
+    }
+})
+
 export default router;
