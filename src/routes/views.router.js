@@ -25,6 +25,10 @@ router.use(cookieParser('CoderS3cr3tC0d3'))
 //router.get('/ingresar', (req, res) => {
 // Cabiado para el entregable    
 router.get('/', (req, res) => {
+    if (req.session.user){
+        return   res.redirect('/products');
+     }
+
     const data = {
         title: 'Signup-page',
         bodyClass: 'signup-page' // Puedes cambiar esto dinámicamente según tus necesidades
@@ -121,7 +125,8 @@ router.get('/products', async (req, res) => {
     }
     catch(error){
         console.error('Error:', error);
-        res.status(500).json({ error: 'Hubo un error al Recuperar Products.' });    
+        //res.status(500).json({ error: 'Hubo un error al Recuperar Products.' });    
+        return  res.render('errors', { message: 'Hubo un error al Recuperar Products.' });
     }
 })
 
